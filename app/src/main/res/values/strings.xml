@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Dictionary</string>
+    <string name="app_name">Base TabLayout</string>
+    <string name="one">Categories</string>
+    <string name="two">Search</string>
+    <string name="three">Favour</string>
+    <string name="four">Four</string>
 </resources>
