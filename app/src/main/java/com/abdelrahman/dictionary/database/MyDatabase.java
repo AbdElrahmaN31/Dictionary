@@ -14,6 +14,7 @@ import java.util.List;
 
 public class MyDatabase extends SQLiteAssetHelper {
 
+    private static final String TAG = "Database";
     private static final String DATABASE_NAME = "data.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_CATEGORIES = "categories";
@@ -80,6 +81,52 @@ public class MyDatabase extends SQLiteAssetHelper {
         return wordList;
     }
 
+    public List<Word> getFavouriteWords() {
+        List<Word> wordList = new ArrayList<Word>();
+        String selectQuery = "SELECT * FROM " + TABLE_DICTIONARY + " WHERE " + KEY_DICTIONARY_FAVOUR + "=" + 1;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Word word = new Word(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getInt(4),
+                        cursor.getInt(5)
+                );
+                // Adding word to list
+                wordList.add(word);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return wordList;
+    }
+
+    public void favorWord(int id){
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_DICTIONARY_FAVOUR,1);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+//        db.rawQuery("UPDATE" + TABLE_DICTIONARY + "SET" + KEY_DICTIONARY_FAVOUR + "=" + 1 + "WHERE" + KEY_DICTIONARY_ID + "=" + id,null);
+        db.update(TABLE_DICTIONARY,cv,KEY_DICTIONARY_ID + "=?",new String[]{String.valueOf(id)});
+        db.close();
+    }
+
+    public void unFavorWord(int id){
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_DICTIONARY_FAVOUR,0);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+//        db.rawQuery("UPDATE" + TABLE_DICTIONARY  + "SET" + KEY_DICTIONARY_FAVOUR + "=" + 0 + "WHERE" + KEY_DICTIONARY_ID + "=" + id,null);
+        db.update(TABLE_DICTIONARY,cv,KEY_DICTIONARY_ID + "=?",new String[]{String.valueOf(id)});
+        db.close();
+    }
+
     public List<Word> search(int searchTerm) {
 
         List<Word> wordList = new ArrayList<Word>();
@@ -107,16 +154,6 @@ public class MyDatabase extends SQLiteAssetHelper {
         db.close();
         return wordList;
     }
-
-    public void updateWord(int id){
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_DICTIONARY_FAVOUR,1);
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.update(TABLE_DICTIONARY,cv,KEY_DICTIONARY_ID + "= ?",new String[]{String.valueOf(id)});
-        db.close();
-    }
-
 
     public Word getWord(int id) {
         String selectQuery = "SELECT * FROM " + TABLE_DICTIONARY + " WHERE " + KEY_DICTIONARY_ID + "=" + id;

@@ -10,17 +10,17 @@ import android.view.ViewGroup;
 
 import com.abdelrahman.dictionary.R;
 
-public class TwoFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
     View view;
 
-    public TwoFragment() {
+    public SearchFragment() {
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.item_two, container, false);
+        view = inflater.inflate(R.layout.word_item, container, false);
 
         return view;
     }

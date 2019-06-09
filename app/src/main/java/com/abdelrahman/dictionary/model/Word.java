@@ -1,23 +1,24 @@
 package com.abdelrahman.dictionary.model;
 
 public class Word {
-    private String arabicWord,pronunciation, chinese;
+    private String arabicWord,pronunciation, chineseWord;
     private int wordId,wordCategoryId,favour;
 
-    public Word(int wordId, String arabicWord, String pronunciation, String chinese,int category_id,int favour) {
+    public Word(int wordId, String arabicWord, String pronunciation, String chineseWord, int category_id, int favour) {
         this.wordId = wordId;
         this.arabicWord = arabicWord;
         this.pronunciation = pronunciation;
-        this.chinese = chinese;
+        this.chineseWord = chineseWord;
         this.wordCategoryId = category_id;
     }
 
-    public Word(String arabicWord, String chinese) {
-        this.arabicWord = arabicWord;
-        this.chinese = chinese;
+    public int getWordId() {
+        return wordId;
     }
 
-
+    public int getWordCategoryId() {
+        return wordCategoryId;
+    }
 
     public String getArabicWord() {
         return arabicWord;
@@ -27,12 +28,12 @@ public class Word {
         return pronunciation;
     }
 
-    public String getChinese() {
-        return chinese;
+    public String getChineseWord() {
+        return chineseWord;
     }
 
-    public int isFavour() {
-        return favour;
+    public boolean isFavour() {
+        return  (this.favour == 1);
     }
 
     public void setFavour() {

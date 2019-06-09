@@ -1,7 +1,13 @@
 <resources>
-    <string name="app_name">Base TabLayout</string>
+    <string name="app_name">قاموس المصطلحات</string>
     <string name="one">Categories</string>
     <string name="two">Search</string>
     <string name="three">Favour</string>
     <string name="four">Four</string>
+    <string name="category_name">Category Name</string>
+    <string name="arabic">Arabic</string>
+    <string name="pronunciation">Pronunciation</string>
+    <string name="chineseWord">Chinese</string>
+    <string name="share_using">Share using</string>
+    <string name="Dictionary">قاموس المصطلحات</string>
 </resources>
