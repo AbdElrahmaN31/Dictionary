@@ -54,6 +54,33 @@ public class MyDatabase extends SQLiteAssetHelper {
         return categoryList;
     }
 
+    public List<Word> getHekma(){
+        List<Word> wordList = new ArrayList<Word>();
+        String selectQuery = "SELECT * FROM " + TABLE_DICTIONARY + " WHERE " + KEY_DICTIONARY_CATEGORY_ID + "=" + 39;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Word word = new Word(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getInt(4),
+                        cursor.getInt(5)
+                );
+                // Adding word to list
+                wordList.add(word);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return wordList;
+    }
+
+
     public List<Word> getCategory(int categoryID) {
 
         List<Word> wordList = new ArrayList<Word>();
@@ -127,11 +154,11 @@ public class MyDatabase extends SQLiteAssetHelper {
         db.close();
     }
 
-    public List<Word> search(int searchTerm) {
+    public List<Word> search(String searchTerm) {
 
         List<Word> wordList = new ArrayList<Word>();
-        String selectQuery = "SELECT * FROM " + TABLE_DICTIONARY + " WHERE " + KEY_DICTIONARY_ARABIC + "LIKE" + "%" +searchTerm + "%" +
-                "OR" + KEY_DICTIONARY_CHINESE + "LIKE" + "%" +searchTerm + "%";
+        String selectQuery = "SELECT * FROM " + TABLE_DICTIONARY + " WHERE " + KEY_DICTIONARY_ARABIC + "LIKE" + searchTerm ;
+//                + "OR" + KEY_DICTIONARY_CHINESE + "LIKE" + "%" +searchTerm + "%";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
