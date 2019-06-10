@@ -29,7 +29,7 @@ public class CategoriesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view =  inflater.inflate(R.layout.fragment_item, container, false);
+        view =  inflater.inflate(R.layout.fragment_recycler, container, false);
         getData();
         mRecyclerView = view.findViewById(R.id.fragments_recycler_view);
         mRecyclerView.setHasFixedSize(true);
