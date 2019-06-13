@@ -31,7 +31,7 @@ public class WordRecyclerAdapter extends RecyclerView.Adapter<WordRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         final Word mWord = mWordList.get(position);
 
         final String arabicWord = mWord.getArabicWord();
@@ -45,10 +45,7 @@ public class WordRecyclerAdapter extends RecyclerView.Adapter<WordRecyclerAdapte
         holder.pronunciationText.setText(pronunciation);
         holder.chineseText.setText(chineseWord);
         shareImage.setImageResource(R.drawable.ic_share_black_24dp);
-        if (isFavored)
-            favorImage.setImageResource(R.drawable.ic_heart_black);
-        else
-            favorImage.setImageResource(R.drawable.ic_heart_outline);
+        setVaforImage(holder, position);
         //set OnClickListeners
         favorImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +56,7 @@ public class WordRecyclerAdapter extends RecyclerView.Adapter<WordRecyclerAdapte
                     mDatabase.unFavorWord(wordId);
                 else
                     mDatabase.favorWord(wordId);
+                setVaforImage(holder, position);
                 notifyDataSetChanged();
                 mDatabase.close();
             }
@@ -79,6 +77,15 @@ public class WordRecyclerAdapter extends RecyclerView.Adapter<WordRecyclerAdapte
         });
     }
 
+    private void setVaforImage(MyViewHolder holder, int position) {
+        final Word mWord = mWordList.get(position);
+        final boolean isFavored = mWord.isFavour();
+        final ImageView favorImage = holder.favorImage;
+        if (isFavored)
+            favorImage.setImageResource(R.drawable.ic_heart_black);
+        else
+            favorImage.setImageResource(R.drawable.ic_heart_outline);
+    }
     @Override
     public int getItemCount() {
         return mWordList.size();

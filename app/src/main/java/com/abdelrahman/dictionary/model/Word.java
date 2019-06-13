@@ -10,6 +10,7 @@ public class Word {
         this.pronunciation = pronunciation;
         this.chineseWord = chineseWord;
         this.wordCategoryId = category_id;
+        this.favour = favour;
     }
 
     public int getWordId() {

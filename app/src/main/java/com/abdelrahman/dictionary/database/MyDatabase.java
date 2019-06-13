@@ -32,7 +32,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public List<Category> getCategories(){
+    public List<Category> getCategories() {
         List<Category> categoryList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_CATEGORIES;
 
@@ -54,7 +54,7 @@ public class MyDatabase extends SQLiteAssetHelper {
         return categoryList;
     }
 
-    public List<Word> getHekma(){
+    public List<Word> getHekma() {
         List<Word> wordList = new ArrayList<Word>();
         String selectQuery = "SELECT * FROM " + TABLE_DICTIONARY + " WHERE " + KEY_DICTIONARY_CATEGORY_ID + "=" + 39;
 
@@ -134,34 +134,38 @@ public class MyDatabase extends SQLiteAssetHelper {
         return wordList;
     }
 
-    public void favorWord(int id){
+    public void favorWord(int id) {
         ContentValues cv = new ContentValues();
-        cv.put(KEY_DICTIONARY_FAVOUR,1);
+        cv.put(KEY_DICTIONARY_FAVOUR, 1);
 
         SQLiteDatabase db = this.getWritableDatabase();
 //        db.rawQuery("UPDATE" + TABLE_DICTIONARY + "SET" + KEY_DICTIONARY_FAVOUR + "=" + 1 + "WHERE" + KEY_DICTIONARY_ID + "=" + id,null);
-        db.update(TABLE_DICTIONARY,cv,KEY_DICTIONARY_ID + "=?",new String[]{String.valueOf(id)});
+        db.update(TABLE_DICTIONARY, cv, KEY_DICTIONARY_ID + "=?", new String[]{String.valueOf(id)});
         db.close();
     }
 
-    public void unFavorWord(int id){
+    public void unFavorWord(int id) {
         ContentValues cv = new ContentValues();
-        cv.put(KEY_DICTIONARY_FAVOUR,0);
+        cv.put(KEY_DICTIONARY_FAVOUR, 0);
 
         SQLiteDatabase db = this.getWritableDatabase();
 //        db.rawQuery("UPDATE" + TABLE_DICTIONARY  + "SET" + KEY_DICTIONARY_FAVOUR + "=" + 0 + "WHERE" + KEY_DICTIONARY_ID + "=" + id,null);
-        db.update(TABLE_DICTIONARY,cv,KEY_DICTIONARY_ID + "=?",new String[]{String.valueOf(id)});
+        db.update(TABLE_DICTIONARY, cv, KEY_DICTIONARY_ID + "=?", new String[]{String.valueOf(id)});
         db.close();
     }
 
     public List<Word> search(String searchTerm) {
 
         List<Word> wordList = new ArrayList<Word>();
-        String selectQuery = "SELECT * FROM " + TABLE_DICTIONARY + " WHERE " + KEY_DICTIONARY_ARABIC + "LIKE" + searchTerm ;
-//                + "OR" + KEY_DICTIONARY_CHINESE + "LIKE" + "%" +searchTerm + "%";
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        // search by arabic word
+        Cursor cursor = db.query(TABLE_DICTIONARY, new String[]{KEY_DICTIONARY_ID,
+                        KEY_DICTIONARY_ARABIC, KEY_DICTIONARY_PRONUNCIATION, KEY_DICTIONARY_CHINESE
+                        , KEY_DICTIONARY_CATEGORY_ID, KEY_DICTIONARY_FAVOUR},
+                KEY_DICTIONARY_ARABIC + "=?",
+                new String[]{String.valueOf(searchTerm)},
+                null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -178,6 +182,30 @@ public class MyDatabase extends SQLiteAssetHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+
+        cursor = db.query(TABLE_DICTIONARY, new String[]{KEY_DICTIONARY_ID,
+                        KEY_DICTIONARY_ARABIC, KEY_DICTIONARY_PRONUNCIATION, KEY_DICTIONARY_CHINESE
+                        , KEY_DICTIONARY_CATEGORY_ID, KEY_DICTIONARY_FAVOUR},
+                KEY_DICTIONARY_ARABIC + "=?",
+                new String[]{String.valueOf(searchTerm)},
+                null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Word word = new Word(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getInt(4),
+                        cursor.getInt(5)
+                );
+                // Adding word to list
+                wordList.add(word);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
         db.close();
         return wordList;
     }
@@ -190,14 +218,14 @@ public class MyDatabase extends SQLiteAssetHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-               word = new Word(
+                word = new Word(
                         cursor.getInt(0),
                         cursor.getString(1),
                         cursor.getString(2),
                         cursor.getString(3),
                         cursor.getInt(4),
                         cursor.getInt(5)
-               );
+                );
             }
             cursor.close();
             db.close();
